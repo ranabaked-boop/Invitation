@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Undangan Spesial</title>
+
+<style>
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:15px;
+width:90%;
+max-width:450px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+button{
+padding:12px 20px;
+margin:8px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+img{
+width:100%;
+margin-top:15px;
+border-radius:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card" id="app"></div>
+
+<script>
+
+const WEBHOOK="https://script.google.com/macros/s/AKfycbxjnOq1uvNaE892pLdrI-XiX9thf-4H-KFCmWEMsVzkOGNTrwrdsO-E2m5S4HM3WGtV/exec"
+
+let data={timestamp:new Date().toLocaleString()}
+
+function sendData(){
+fetch(WEBHOOK,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+})
+}
+
+function login(){
+
+document.getElementById("app").innerHTML=`
+
+<h2>Undangan Spesial</h2>
+
+<input type="password" id="pass" placeholder="Masukkan kata sandi">
+
+<p><i>Clue : tanggal, bulan, tahun lahir pengirim</i></p>
+
+<button onclick="check()">Masuk</button>
+
+`
+}
+
+function check(){
+
+let p=document.getElementById("pass").value
+
+if(p==="01101998"){
+menu()
+}else{
+alert("Kata sandi salah")
+}
+
+}
+
+function menu(){
+
+document.getElementById("app").innerHTML=`
+
+<h2>Pilih jawaban</h2>
+
+<button onclick="accept()">Merayakan ulang tahun bersama</button>
+
+<button onclick="decline()">Tidak, terimakasih</button>
+
+`
+
+}
+
+function decline(){
+
+data.choice="Tidak Terimakasih"
+sendData()
+
+document.getElementById("app").innerHTML="<h2>Happy Birthday</h2>"
+
+}
+
+function accept(){
+
+document.getElementById("app").innerHTML=`
+
+<h3>Pilih hadiah</h3>
+
+<button onclick="opt1()">1. Party di Helens Kemang<br>4 April 2026 pukul 22:00</button>
+
+<button onclick="opt2()">2. Free menginap 1 malam<br>Aston Imperial Bekasi</button>
+
+<button onclick="opt3()">3. Beli kemeja</button>
+
+`
+
+}
+
+function schedule(next){
+
+document.getElementById("app").innerHTML=`
+
+<h3>Informasikan schedule anda hari Sabtu dan Minggu</h3>
+
+<textarea id="schedule"></textarea>
+
+<button onclick="${next}()">Submit</button>
+
+`
+
+}
+
+function opt1(){
+data.option="Party Helens Kemang"
+schedule("opt1b")
+}
+
+function opt1b(){
+
+data.schedule=document.getElementById("schedule").value
+
+document.getElementById("app").innerHTML=`
+
+<p>Bersediakah anda dijemput kendaraan pada pukul 10 malam di tempat anda bekerja serta mengembalikan kendaraan maksimal pukul 10 pagi?</p>
+
+<button onclick="bersedia()">Bersedia</button>
+<button onclick="tidak()">Tidak bersedia</button>
+
+`
+
+}
+
+function bersedia(){
+
+data.transport="Bersedia"
+sendData()
+
+document.getElementById("app").innerHTML="<h2>Terimakasih</h2>"
+
+}
+
+function tidak(){
+
+data.transport="Tidak Bersedia"
+sendData()
+
+document.getElementById("app").innerHTML="<h2>Baik, anda bisa menggunakan kendaraan pribadi anda</h2>"
+
+}
+
+function opt2(){
+data.option="Free Hotel"
+schedule("opt2b")
+}
+
+function opt2b(){
+
+data.schedule=document.getElementById("schedule").value
+sendData()
+
+document.getElementById("app").innerHTML=`
+<h2>Selamat anda dapat free menginap 1 malam di Aston Imperial Bekasi bersama pasanganmu</h2>
+`
+
+}
+
+function opt3(){
+data.option="Beli Kemeja"
+schedule("opt3b")
+}
+
+function opt3b(){
+
+data.schedule=document.getElementById("schedule").value
+
+document.getElementById("app").innerHTML=`
+
+<button onclick="link()">Kirimkan link kemeja</button>
+
+<button onclick="bareng()">Beli kemeja bersama</button>
+
+`
+
+}
+
+function link(){
+
+document.getElementById("app").innerHTML=`
+
+<p>Cantumkan link di sini</p>
+
+<input id="link">
+
+<button onclick="saveLink()">Submit</button>
+
+`
+
+}
+
+function saveLink(){
+
+data.link=document.getElementById("link").value
+sendData()
+
+document.getElementById("app").innerHTML="<h2>Terimakasih</h2>"
+
+}
+
+function bareng(){
+
+sendData()
+
+document.getElementById("app").innerHTML=`
+
+<h3>Pilih hari untuk belanja bersama</h3>
+
+<img src="schedule-april.png"> 
+
+`
+
+}
+
+login()
+
+</script>
+
+</body>
+</html>
